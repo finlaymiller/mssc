@@ -1,6 +1,6 @@
-### Multithreaded Sudoku Solution Checker
-Assignment 2 of my Operating Systems course.
-===
+## Multithreaded Sudoku Solution Checker
+
+#### Assignment 2 of my Operating Systems course
 
 Provide this with a 9x9 grid of integers as below and it will check whether or not the grid is a valid sudoku solution.
 ```
@@ -15,6 +15,9 @@ Provide this with a 9x9 grid of integers as below and it will check whether or n
 3 2 8 5 1 4 9 6 7
 ```
 Build with
+
 `build inst here`
+
 Run with
+
 `run inst here`
