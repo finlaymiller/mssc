@@ -13,19 +13,25 @@
     - Written by Finlay Miller B00675696  
 */
 
+// required libraries 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
 #include <ctype.h>
 
+// global definitions
 #define THREADCOUNT 11
+#define VERSION 0.8
 
+// function definitions
 int read_grid(int (*grid)[9], char *);
 void *check_subgrid(void *);
 void *check_row(void *);
 void *check_col(void *);
+void help_text(void);
 
+// grid parameter struct definition
 typedef struct
 {
     int row;
@@ -33,14 +39,25 @@ typedef struct
     int *grid[9];
 } parameters;
 
+/*
+    PURPOSE: Program mainline. Creates objects, calls other funtions, etc.
+    INPUT:  Filename of sudoku grid to check 
+    OUTPUT: 0       if success
+            1       if failure
+*/
 int main(int argc, char *argv[])
 {
+    // print help
+    help_text;
+
+    // check to ensure that input file was specified
     if(argc < 2)
     {
         printf("Please specify the input filename.\n");
         return 1;
     }
 
+    // create grid, threadchecks
     int grid[9][9], threadStatus[THREADCOUNT], check = 0;
 
     parameters *data[9];
@@ -61,6 +78,7 @@ int main(int argc, char *argv[])
                 return 1;
             }
 
+            // send data to grid otherwise
             data[i]->col = col;
             data[i]->row = row;
         }
@@ -73,6 +91,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // create threads
     pthread_t tid[THREADCOUNT];
 
     // create subgrid check thread
@@ -100,6 +119,7 @@ int main(int argc, char *argv[])
         }
     }
     
+    // tell user about result
     if (check)
     {
         printf("Sudoku Solution Invalid.\n");
@@ -108,8 +128,8 @@ int main(int argc, char *argv[])
     {
         printf("Sudoku Solution Valid.\n");
     }
-    
 
+    return 0;
 }
 
 /*
@@ -120,6 +140,7 @@ int main(int argc, char *argv[])
 */
 void *check_subgrid(void * d)
 {
+    // this array is used as a checklist for each digit
     int foundDigits[10] = {0};
     parameters *params = (parameters *) d;
 
@@ -151,7 +172,7 @@ void *check_subgrid(void * d)
 int read_grid(int (*grid)[9], char *file)
 {
     char val;
-    int r, c, valCount;
+    int r = 0, c = 0, valCount = 0;
     FILE *f = fopen(file, "r");
 
     while(fread(&val, 1, 1, f) > 0 && valCount < 81)
@@ -269,4 +290,27 @@ void *check_col(void *d)
     }
     // valid subgrid
     return 1;
+}
+
+void help_text(void)
+{
+    printf("* ------------------------------------- *\n"
+        "\t *       SUDOKU SOLVER VERSION %d        *\n"
+        "\t *       FINLAY MILLER B00675696         *\n"
+        "\t *   USAGE: executable-name input-file   *\n"
+        "\t *   INPUT FILE MUST HAVE FORMAT BELOW   *\n"
+        "\t *                                       *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *           N N N N N N N N N           *\n"
+        "\t *                                       *\n"
+        "\t *   WHERE EACH N IS AN INTEGER BETWEEN  *\n"
+        "\t *   ZERO AND NINE                       *\n"
+        "\t * ------------------------------------- *\n", VERSION);
 }
