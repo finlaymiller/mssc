@@ -1,7 +1,5 @@
 ## Multithreaded Sudoku Solution Checker
 
-#### Assignment 2 of my Operating Systems course
-
 Provide this with a 9x9 grid of integers as below and it will check whether or not the grid is a valid sudoku solution.
 ```
 1 4 2 3 6 5 7 8 9
@@ -16,8 +14,8 @@ Provide this with a 9x9 grid of integers as below and it will check whether or n
 ```
 Build with
 
-`build inst here`
+`gcc -std=c99 -o sudoku_solver mssc.c`
 
 Run with
 
-`run inst here`
+`./sudoku_solver <input-file>`
